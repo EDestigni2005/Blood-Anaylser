@@ -41,4 +41,12 @@ public class UnionFind {
             size[rootP] += size[rootQ];
         }
     }
+
+    public int coordToIndex(int x, int y){
+        return y * width + x;
+    }
+
+    public int getComponentSize(int p){
+        return size[find(p)];
+    }
 }
