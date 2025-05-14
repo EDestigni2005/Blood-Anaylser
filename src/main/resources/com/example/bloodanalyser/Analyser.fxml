@@ -13,94 +13,94 @@
 <?import javafx.scene.layout.StackPane?>
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bloodanalyser.AnalyserController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-         <menus>
-            <Menu mnemonicParsing="false" text="File">
-              <items>
-                <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open Menu" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Exit" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Analysis">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Convert to Tricolour" />
-                  <MenuItem mnemonicParsing="false" text="Analyze Blood Cells" />
-                  <MenuItem mnemonicParsing="false" text="Toggle Numbering" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Settings">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Colour Thresholds" />
-                  <MenuItem mnemonicParsing="false" text="Cell Size Parameters" />
-              </items>
-            </Menu>
-         </menus>
-      </MenuBar>
-   </top>
-   <center>
-      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-        <tabs>
-          <Tab fx:id="originalTab" text="Original Image">
-               <content>
-                  <ScrollPane prefHeight="200.0" prefWidth="200.0">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open Menu" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" text="Exit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Analysis">
+                    <items>
+                        <MenuItem fx:id="convertMenuItem" mnemonicParsing="false" text="Convert to Tricolour" />
+                        <MenuItem fx:id="analyzeMenuItem" mnemonicParsing="false" text="Analyze Blood Cells" />
+                        <MenuItem fx:id="toggleNumberingMenuItem" mnemonicParsing="false" text="Toggle Numbering" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Settings">
+                    <items>
+                        <MenuItem fx:id="colourThresholdsMenuItem" mnemonicParsing="false" text="Colour Thresholds" />
+                        <MenuItem fx:id="cellSizeMenuItem" mnemonicParsing="false" text="Cell Size Parameters" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab fx:id="originalTab" text="Original Image">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                            </content>
+                        </ScrollPane>
                     </content>
-                  </ScrollPane>
-               </content>
-               <content>
-                  <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <StackPane prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <ImageView fx:id="originalImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </StackPane>
-                           </children>
-                        </AnchorPane>
+                        <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fx:id="originalImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </ScrollPane>
                     </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-          <Tab fx:id="tricolourTab" text="Tricolour Image">
-               <content>
-                  <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <StackPane prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <ImageView fx:id="tricolourImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </StackPane>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-            <Tab fx:id="AnalysisTab" text="Analysis Results">
-               <content>
-                  <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <StackPane prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <ImageView fx:id="analysisImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </StackPane>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-        </tabs>
-      </TabPane>
-   </center>
+                </Tab>
+                <Tab fx:id="tricolourTab" text="Tricolour Image">
+                    <content>
+                        <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fx:id="tricolourImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="AnalysisTab" text="Analysis Results">
+                    <content>
+                        <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fx:id="analysisImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
 </BorderPane>
