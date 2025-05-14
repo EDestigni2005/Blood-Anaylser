@@ -146,20 +146,29 @@ public class BloodCellAnalyser {
                 for (int dx = -1; dx <= 1; dx++) {
                     for (int dy = -1; dy <= 1; dy++) {
                         if (dx == 0 && dy == 0) continue;
-                        drawText(pixelWriter, String.valueOf(cell.id), labelX + dx, labelY + dy, Color.BLACK);
+                        drawText(pixelWriter, String.valueOf(cell.id), labelX + dx, labelY + dy, Color.BLACK, width, height);
                     }
                 }
-                drawText(pixelWriter, String.valueOf(cell.id), labelX, labelY, Color.WHITE);
+                drawText(pixelWriter, String.valueOf(cell.id), labelX, labelY, Color.WHITE, width, height);
             }
         }
 
         return result;
     }
 
-    private void drawText(PixelWriter pixelWriter, String text, int x, int y, Color color) {
+    private void drawText(PixelWriter pixelWriter, String text, int x, int y, Color color, int width, int height) {
         for (int i = 0; i < text.length(); i++) {
-            pixelWriter.setColor(x + i * 7, y, color);
-            pixelWriter.setColor(x + i * 7, y + 1, color);
+            int pixelX = x + i * 7;
+            int pixelY = y;
+
+            if (pixelX >= 0 && pixelX < width && pixelY >= 0 && pixelY < height) {
+                pixelWriter.setColor(pixelX, pixelY, color);
+            }
+
+            pixelY = y + 1;
+            if (pixelX >= 0 && pixelX < width && pixelY >= 0 && pixelY < height) {
+                pixelWriter.setColor(pixelX, pixelY, color);
+            }
         }
     }
 
