@@ -40,6 +40,8 @@ public class AnalyserController {
         openMenuItem.setOnAction(e -> loadImage());
 
         addMenuHandlers();
+
+        updateToggleNumberingText();
     }
 
     private void addMenuHandlers() {
@@ -49,6 +51,10 @@ public class AnalyserController {
         colourThresholdsMenuItem.setOnAction(e -> showColourThresholdDialog());
         cellSizeMenuItem.setOnAction(e -> showCellSizeDialog());
         exitMenuItem.setOnAction(e -> exitApplication());
+    }
+
+    private void updateToggleNumberingText() {
+        toggleNumberingMenuItem.setText(showNumbering ? "Hide Numbering" : "Show Numbering");
     }
 
     private void exitApplication() {
@@ -138,6 +144,7 @@ public class AnalyserController {
 
     private void toggleNumbering() {
         showNumbering = !showNumbering;
+        updateToggleNumberingText();
 
         if (analysisResult != null) {
             analyseBloodCells();

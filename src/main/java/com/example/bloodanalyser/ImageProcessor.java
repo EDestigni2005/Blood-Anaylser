@@ -29,19 +29,20 @@ public class ImageProcessor {
 
                 double luminance = 0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue();
                 double purpleness = (color.getRed() + color.getBlue() - color.getGreen());
-                double redness = (color.getRed() - (color.getBlue() + color.getGreen())/2 );
+                double redness = (color.getRed() - (color.getBlue() + color.getGreen())/2);
 
                 Color newColor;
-                if (purpleness > purpleThreshold/255.0 && luminance <0.7){
+                if (purpleness > purpleThreshold/255.0 && luminance < 0.7){
                     newColor = Color.PURPLE;
-                }else if (redness > redThreshold && luminance < 0.9){
+                } else if (redness > redThreshold/255.0 && luminance < 0.9){
                     newColor = Color.RED;
-                }else {
+                } else {
                     newColor = Color.WHITE;
                 }
+
+                pixelWriter.setColor(x, y, newColor);
             }
         }
         return tricolourImage;
     }
-
 }

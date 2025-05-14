@@ -6,6 +6,8 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.*;
 
@@ -28,6 +30,8 @@ public class BloodCellAnalyser {
         int height = (int) tricolourImage.getHeight();
 
         unionFind = new UnionFind(width, height);
+        cellComponents = new HashMap<>();
+
         PixelReader pixelReader = tricolourImage.getPixelReader();
 
         for (int y = 0; y < height; y++) {
@@ -54,6 +58,32 @@ public class BloodCellAnalyser {
             }
         }
 
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = pixelReader.getColor(x, y);
+
+                if (isWhite(color)) continue;
+
+                int index = unionFind.coordToIndex(x, y);
+                int root = unionFind.find(index);
+
+                if (!cellComponents.containsKey(root)) {
+                    CellInfo cellInfo = new CellInfo();
+                    cellInfo.color = isRed(color) ? CellType.RED : CellType.WHITE;
+                    cellInfo.minX = cellInfo.maxX = x;
+                    cellInfo.minY = cellInfo.maxY = y;
+                    cellInfo.size = 1;
+                    cellComponents.put(root, cellInfo);
+                } else {
+                    CellInfo cellInfo = cellComponents.get(root);
+                    cellInfo.minX = Math.min(cellInfo.minX, x);
+                    cellInfo.maxX = Math.max(cellInfo.maxX, x);
+                    cellInfo.minY = Math.min(cellInfo.minY, y);
+                    cellInfo.maxY = Math.max(cellInfo.maxY, y);
+                    cellInfo.size++;
+                }
+            }
+        }
 
         List<CellInfo> validCells = cellComponents.values().stream()
                 .filter(cell -> cell.size >= minCellSize && cell.size <= maxCellSize)
@@ -108,9 +138,29 @@ public class BloodCellAnalyser {
 
         for (CellInfo cell : cells) {
             drawRectangle(pixelWriter, cell, width, height);
+
+            if (showNumbering) {
+                int labelX = cell.minX + (cell.maxX - cell.minX) / 2;
+                int labelY = cell.minY + (cell.maxY - cell.minY) / 2;
+
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        if (dx == 0 && dy == 0) continue;
+                        drawText(pixelWriter, String.valueOf(cell.id), labelX + dx, labelY + dy, Color.BLACK);
+                    }
+                }
+                drawText(pixelWriter, String.valueOf(cell.id), labelX, labelY, Color.WHITE);
+            }
         }
 
         return result;
+    }
+
+    private void drawText(PixelWriter pixelWriter, String text, int x, int y, Color color) {
+        for (int i = 0; i < text.length(); i++) {
+            pixelWriter.setColor(x + i * 7, y, color);
+            pixelWriter.setColor(x + i * 7, y + 1, color);
+        }
     }
 
     private void drawRectangle(PixelWriter pixelWriter, CellInfo cell, int imageWidth, int imageHeight) {
@@ -135,7 +185,6 @@ public class BloodCellAnalyser {
             pixelWriter.setColor(minX, y, color);
             pixelWriter.setColor(maxX, y, color);
         }
-
     }
 
     private boolean isWhite(Color color) {
