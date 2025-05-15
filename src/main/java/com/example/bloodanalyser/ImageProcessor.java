@@ -27,14 +27,18 @@ public class ImageProcessor {
             for(int x = 0; x < width; x++){
                 Color color = pixelReader.getColor(x, y);
 
-                double luminance = 0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue();
-                double purpleness = (color.getRed() + color.getBlue() - color.getGreen());
-                double redness = (color.getRed() - (color.getBlue() + color.getGreen())/2);
+                double red = color.getRed() * 255;
+                double green = color.getGreen() * 255;
+                double blue = color.getBlue() * 255;
+
+                double luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
+                double redness = red - (green + blue) / 2;
+                double purpleness = (red + blue) - green * 1.5;
 
                 Color newColor;
-                if (purpleness > purpleThreshold/255.0 && luminance < 0.7){
+                if (purpleness > purpleThreshold && luminance < 200) {
                     newColor = Color.PURPLE;
-                } else if (redness > redThreshold/255.0 && luminance < 0.9){
+                } else if (redness > redThreshold && luminance > 100 && luminance < 220) {
                     newColor = Color.RED;
                 } else {
                     newColor = Color.WHITE;

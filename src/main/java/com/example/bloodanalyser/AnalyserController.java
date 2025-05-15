@@ -9,6 +9,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.util.Optional;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.VBox;
 
 public class AnalyserController {
     @FXML private ImageView originalImageView;
@@ -29,28 +31,24 @@ public class AnalyserController {
     private WritableImage analysisImage;
 
     private boolean showNumbering = false;
-    private int redThreshold = 150;
-    private int purpleThreshold = 180;
-    private int minCellSize = 50;
-    private int maxCellSize = 2000;
+    private int redThreshold = 30;
+    private int purpleThreshold = 40;
+    private int minCellSize = 30;
+    private int maxCellSize = 3000;
 
     private BloodCellAnalyser.AnalysisResult analysisResult;
 
     public void initialize() {
         openMenuItem.setOnAction(e -> loadImage());
 
-        addMenuHandlers();
-
-        updateToggleNumberingText();
-    }
-
-    private void addMenuHandlers() {
         convertMenuItem.setOnAction(e -> convertToTricolour());
         analyzeMenuItem.setOnAction(e -> analyseBloodCells());
         toggleNumberingMenuItem.setOnAction(e -> toggleNumbering());
         colourThresholdsMenuItem.setOnAction(e -> showColourThresholdDialog());
         cellSizeMenuItem.setOnAction(e -> showCellSizeDialog());
         exitMenuItem.setOnAction(e -> exitApplication());
+
+        updateToggleNumberingText();
     }
 
     private void updateToggleNumberingText() {
@@ -82,6 +80,8 @@ public class AnalyserController {
             analysisImage = null;
             tricolourImageView.setImage(null);
             analysisImageView.setImage(null);
+
+            analysisResult = null;
 
             tabPane.getSelectionModel().select(0);
 
@@ -125,7 +125,7 @@ public class AnalyserController {
     }
 
     private void showAnalysisResults() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Analysis Results");
         alert.setHeaderText("Blood Cell Analysis Complete");
 
@@ -146,7 +146,7 @@ public class AnalyserController {
         showNumbering = !showNumbering;
         updateToggleNumberingText();
 
-        if (analysisResult != null) {
+        if (analysisResult != null && tricolourImage != null) {
             analyseBloodCells();
         }
     }
@@ -156,13 +156,15 @@ public class AnalyserController {
         dialog.setTitle("Colour Thresholds");
         dialog.setHeaderText("Adjust colour thresholds for cell detection");
 
-        Slider redSlider = new Slider(50, 200, redThreshold);
+        Slider redSlider = new Slider(0, 100, redThreshold);
         redSlider.setShowTickLabels(true);
         redSlider.setShowTickMarks(true);
+        redSlider.setMajorTickUnit(20);
 
-        Slider purpleSlider = new Slider(50, 200, purpleThreshold);
+        Slider purpleSlider = new Slider(0, 100, purpleThreshold);
         purpleSlider.setShowTickLabels(true);
         purpleSlider.setShowTickMarks(true);
+        purpleSlider.setMajorTickUnit(20);
 
         Label redLabel = new Label("Red Threshold: " + redThreshold);
         Label purpleLabel = new Label("Purple Threshold: " + purpleThreshold);
@@ -177,8 +179,11 @@ public class AnalyserController {
             purpleLabel.setText("Purple Threshold: " + purpleThreshold);
         });
 
-        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(10);
-        content.getChildren().addAll(redLabel, redSlider, purpleLabel, purpleSlider);
+        VBox content = new VBox(10);
+        content.getChildren().addAll(
+                redLabel, redSlider,
+                purpleLabel, purpleSlider
+        );
         dialog.getDialogPane().setContent(content);
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -186,8 +191,11 @@ public class AnalyserController {
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (originalImage != null && tricolourImage != null) {
+            if (originalImage != null) {
                 convertToTricolour();
+                if (tricolourImage != null) {
+                    analyseBloodCells();
+                }
             }
         }
     }
@@ -200,10 +208,12 @@ public class AnalyserController {
         Slider minSlider = new Slider(10, 200, minCellSize);
         minSlider.setShowTickLabels(true);
         minSlider.setShowTickMarks(true);
+        minSlider.setMajorTickUnit(50);
 
         Slider maxSlider = new Slider(500, 5000, maxCellSize);
         maxSlider.setShowTickLabels(true);
         maxSlider.setShowTickMarks(true);
+        maxSlider.setMajorTickUnit(1000);
 
         Label minLabel = new Label("Min Cell Size: " + minCellSize);
         Label maxLabel = new Label("Max Cell Size: " + maxCellSize);
@@ -218,8 +228,11 @@ public class AnalyserController {
             maxLabel.setText("Max Cell Size: " + maxCellSize);
         });
 
-        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(10);
-        content.getChildren().addAll(minLabel, minSlider, maxLabel, maxSlider);
+        VBox content = new VBox(10);
+        content.getChildren().addAll(
+                minLabel, minSlider,
+                maxLabel, maxSlider
+        );
         dialog.getDialogPane().setContent(content);
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -227,14 +240,14 @@ public class AnalyserController {
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (analysisResult != null) {
+            if (tricolourImage != null) {
                 analyseBloodCells();
             }
         }
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
