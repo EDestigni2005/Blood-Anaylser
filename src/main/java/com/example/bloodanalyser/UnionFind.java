@@ -2,7 +2,7 @@ package com.example.bloodanalyser;
 
 public class UnionFind {
     private final int[] parent;
-    private final int[] size;
+    private final int[] rank;
     private final int width;
     private final int height;
 
@@ -11,20 +11,18 @@ public class UnionFind {
         this.height = height;
         int n = width * height;
         parent = new int[n];
-        size = new int[n];
+        rank = new int[n];
 
         for(int i = 0; i < n; i++){
             parent[i] = i;
-            size[i] = 1;
+            rank[i] = 0;
         }
     }
 
     public int find(int p){
-        while(p != parent[p]){
-            parent[p] = parent[parent[p]];
-            p = parent[p];
-        }
-        return p;
+        if (p != parent[p])
+            parent[p] = find(parent[p]);
+        return parent[p];
     }
 
     public void union(int p, int q){
@@ -33,12 +31,12 @@ public class UnionFind {
 
         if (rootP == rootQ) return;
 
-        if (size[rootP] < size[rootQ]){
+        if (rank[rootP] < rank[rootQ]){
             parent[rootP] = rootQ;
-            size[rootQ] += size[rootP];
-        }else {
+        } else {
             parent[rootQ] = rootP;
-            size[rootP] += size[rootQ];
+            if (rank[rootP] == rank[rootQ])
+                rank[rootP]++;
         }
     }
 
@@ -46,7 +44,7 @@ public class UnionFind {
         return y * width + x;
     }
 
-    public int getComponentSize(int p){
-        return size[find(p)];
+    public boolean connected(int p, int q) {
+        return find(p) == find(q);
     }
 }
